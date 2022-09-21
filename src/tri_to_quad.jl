@@ -1,10 +1,9 @@
 function py_maxWeightMatching(g)
     current = pwd()
+    path = @__DIR__
     py"""
     import sys
-    import os
-    path = os.path.join(os.getcwd(), "src")
-    sys.path.append(path)
+    sys.path.append($path)
     from mwmatching import *
     """
     out = py"maxWeightMatching"(g) .+ 1
