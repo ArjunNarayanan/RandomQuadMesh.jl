@@ -27,3 +27,8 @@ function quad_mesh(boundary_points; algorithm="matching")
         error("Expected algorithm = {matching, catmull-clark} but got algorithm = $algorithm")
     end
 end
+
+function tri_mesh(boundary_points)
+    p, t = polytrimesh([boundary_points[:,[1:end;1]]], [], Inf, "pQ")
+    mesh = Mesh(p, t)
+end
