@@ -75,8 +75,8 @@ function random_polygon_trimesh(np)
     Mesh(p,t)
 end
 
-function random_polygon(np)
+function random_polygon(np; scale = 0.5)
     phi = 2π*(1:np)/np
-    r = 0.5 .+ rand(np)
+    r = (1.0 - scale) .+ scale*rand(np)
     pv = @. [r'*cos(phi'); r'*sin(phi')]
 end

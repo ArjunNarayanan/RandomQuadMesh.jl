@@ -28,7 +28,17 @@ function quad_mesh(boundary_points; algorithm="matching")
     end
 end
 
-function tri_mesh(boundary_points)
-    p, t = polytrimesh([boundary_points[:,[1:end;1]]], [], Inf, "pQ")
-    mesh = Mesh(p, t)
+function get_triangle_command(allow_vertex_insert)
+    if allow_vertex_insert
+        return "puq28.6Q"
+    else
+        return "pQ"
+    end
+end
+
+function tri_mesh(boundary_points; hmax = Inf, allow_vertex_insert = true)
+    cmd = get_triangle_command(allow_vertex_insert)
+    
+    p, t = polytrimesh([boundary_points[:,[1:end;1]]], [], hmax, cmd)
+    return Mesh(p, t)
 end
