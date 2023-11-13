@@ -3,26 +3,36 @@ function random_quad_mesh(npts)
     return quad_mesh(pv)
 end
 
-function mwmatching_quad_mesh(boundary_points)
-    p, t = polytrimesh([boundary_points[:,[1:end;1]]], [], Inf, "pQ")
+function mwmatching_quad_mesh(
+    boundary_points,
+    hmax,
+    triangle_alg
+)
+    p, t = polytrimesh([boundary_points[:,[1:end;1]]], [], hmax, triangle_alg)
     mesh = Mesh(p, t)
     q, t = match_tri2quad(mesh)
     quad_mesh = triquad_refine(mesh.p, q, t)
     return quad_mesh
 end
 
-function catmull_clark_quad_mesh(boundary_points)
-    p, t = polytrimesh([boundary_points[:,[1:end;1]]], [], Inf, "pQ")
+function catmull_clark_quad_mesh(
+    boundary_points,
+    hmax,
+    triangle_alg
+)
+    p, t = polytrimesh([boundary_points[:,[1:end;1]]], [], hmax, triangle_alg)
     q = zeros(Int, 4, 0)
     quad_mesh = triquad_refine(p, q, t)
     return quad_mesh
 end
 
-function quad_mesh(boundary_points; algorithm="matching")
+function quad_mesh(boundary_points; algorithm="matching", hmax = Inf, allow_vertex_insert = false)
+    triangle_alg = get_triangle_command(allow_vertex_insert)
+
     if algorithm == "matching"
-        return mwmatching_quad_mesh(boundary_points)
+        return mwmatching_quad_mesh(boundary_points, hmax, triangle_alg)
     elseif algorithm == "catmull-clark"
-        return catmull_clark_quad_mesh(boundary_points)
+        return catmull_clark_quad_mesh(boundary_points, hmax, triangle_alg)
     else
         error("Expected algorithm = {matching, catmull-clark} but got algorithm = $algorithm")
     end
